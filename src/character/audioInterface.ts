@@ -1,4 +1,4 @@
-import Audio from 'naudiodon';
+
 
 export default class AudioInterface {
     /**
@@ -10,39 +10,37 @@ export default class AudioInterface {
      * Gets all the available audio devices
      * @returns Device infos about all devices
      */
-    static getAllDevices() { return Audio.getDevices(); }
+    static getAllDevices() { return null; }
 
     /**
      * Gets all the available microphones
      * @returns Device infos about all the available microphones
      */
     static getMicrophones() {
-        return this.getAllDevices().filter(device => device.maxInputChannels > 0);
+        return null;
     }
     /**
      * Gets all the available speakers
      * @returns Device infos about all the available speakers
      */
     static getSpeakers() {
-        return this.getAllDevices().filter(device => device.maxOutputChannels > 0);
+        return null;
     }
-    private static findDeviceWithCriteria<T>(devices: Audio.DeviceInfo[], index: string, target: T) {
-        return devices.find(device => (device as any)[index] == target);
-    }
+
 
     /**
      * Gets a microphone with its id
      * @returns Found device info or `undefined`
      */
     static getMicrophoneFromId(id: number) {
-        return this.findDeviceWithCriteria(this.getMicrophones(), 'id', id);
+        return null;
     }
     /**
      * Gets a microphone from its name
      * @returns Found device info or `undefined`
      */
     static getMicrophoneFromName(name: string) {
-        return this.findDeviceWithCriteria(this.getMicrophones(), 'name', name);
+        return null;
     }
     
     /**
@@ -50,13 +48,13 @@ export default class AudioInterface {
      * @returns Found device info or `undefined`
      */
     static getSpeakerFromId(id: number) {
-        return this.findDeviceWithCriteria(this.getSpeakers(), 'id', id);
+        return null;
     }
     /**
      * Gets a speaker from its name
      * @returns Found device info or `undefined`
      */
     static getSpeakerFromName(name: string) {
-        return this.findDeviceWithCriteria(this.getSpeakers(), 'name', name);
+        return null;
     }
 };

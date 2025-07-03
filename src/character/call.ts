@@ -9,7 +9,6 @@ import DMConversation from "../chat/dmConversation";
 import fs from 'fs';
 import AudioInterface from "./audioInterface";
 import { exec, spawn } from "child_process";
-import { AudioIO, IoStreamRead, IoStreamWrite, SampleFormat16Bit } from "naudiodon";
 import Warnings from "../warnings";
 
 type DeviceType = 'default' | string | number | false;
@@ -49,10 +48,10 @@ function getDeviceId(type: 'microphone' | 'speaker', device: 'default' | string 
     switch (typeof device) {
         case 'number': 
             method = type == 'microphone' ? AudioInterface.getMicrophoneFromId : AudioInterface.getSpeakerFromId;
-            return method(device)?.id ?? Error(`Cannot find ${type} device with the id ${device}`);
+            return null;
         case 'string': 
             method = type == 'microphone' ? AudioInterface.getMicrophoneFromName : AudioInterface.getSpeakerFromName;
-            return method(device)?.id ?? Error(`Cannot find ${type} device with the name ${device}`);
+            return null;
     }
 
     return -1;
@@ -85,8 +84,8 @@ export class CAICall extends EventEmitterSpecable {
     public inputStream: PassThrough = new PassThrough();
     public outputStream: PassThrough = new PassThrough();
 
-    private inputMicrophoneIO: IoStreamRead | null = null;
-    private speakerOutputIO: IoStreamWrite | null = null;
+    //private inputMicrophoneIO: IoStreamRead | null = null;
+    //private speakerOutputIO: IoStreamWrite | null = null;
 
     public mute: boolean = false;
     public id = "";
@@ -263,7 +262,7 @@ export class CAICall extends EventEmitterSpecable {
 
                 this.liveKitInputStream.on('data', this.dataProcessCallback);
                 
-                if (microphoneId) {
+                /*if (microphoneId) {
                     const microphoneIO = AudioIO({ 
                         inOptions: { 
                             channelCount: 1,
@@ -277,8 +276,8 @@ export class CAICall extends EventEmitterSpecable {
                     this.inputMicrophoneIO = microphoneIO;
                     microphoneIO.pipe(this.liveKitInputStream);
                     microphoneIO.start();
-                }
-                if (speakerId) {
+                }*/
+               /* if (speakerId) {
                     const speakerIO = AudioIO({ 
                         outOptions: { 
                             channelCount: 1,
@@ -292,7 +291,7 @@ export class CAICall extends EventEmitterSpecable {
                     this.speakerOutputIO = speakerIO;
                     this.outputStream.pipe(speakerIO);
                     speakerIO.start();
-                }
+                }*/
 
                 // start audio processing in different async context
                 const stream = new AudioStream(track);
@@ -374,12 +373,12 @@ export class CAICall extends EventEmitterSpecable {
         this.outputStream?.end();
         this.liveKitInputStream?.end();
 
-        this.inputMicrophoneIO?.quit?.();
-        this.speakerOutputIO?.quit?.();
+       // this.inputMicrophoneIO?.quit?.();
+      //  this.speakerOutputIO?.quit?.();
 
-        this.inputMicrophoneIO = null;
-        this.speakerOutputIO = null;
-        
+       // this.inputMicrophoneIO = null;
+      //  this.speakerOutputIO = null;
+
         delete this.liveKitRoom;
     }
 
